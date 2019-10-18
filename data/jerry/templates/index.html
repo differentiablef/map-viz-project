@@ -10,16 +10,24 @@
 </head>
 
 <body>
-  <h2>Project 3 Group 3 Flask App</h2>
+	<h2>Choropleth Plot of North Carolina Counties</h2>
   
+	<!--- The bootstrap .well class adds a rounded border around an element 
+	with a gray background color and some padding --->
+	
     <div class="well">
-         <h3>SELECT Data Type:</h3>
-         <select id="selDataset" onchange="optionChanged(this.value)"></select>
+		<h3>SELECT Data Type:</h3>
+		<select id="selDataset" onchange="optionChanged(this.value)"></select>
     </div>
+	
+	
+	<div id="dataset_info">Initial text ....</div>
+	<div id="state_chart">Initial text ....</div>
+	<div id="bar_chart">Initial text ....</div>
   
-  <script src="https://d3js.org/d3.v5.min.js"></script>  
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="{{ url_for('static', filename='js/*.js') }}"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>  
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </body>
 

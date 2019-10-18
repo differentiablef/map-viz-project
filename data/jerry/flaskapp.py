@@ -21,55 +21,76 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 NC_Counties = Base.classes['NC Counties']
-NC_Life_Expectancy = Base.classes['NC Life Expectancy']
 
 session = Session(engine)
 
 #---------------------------------------------
 
-results1 = session.query(NC_Counties).first()
+# Go through the tables (other than the geometry table 'NC Counties'
+# and extract the non-primary key columns for each of the datasets.
 
-print(results1.name)
+datasets = []
+DBtables = {}
 
-results2 = session.query(NC_Life_Expectancy).first()
-
-
-print(results2.life_expectancy)
-
-results = session.query(NC_Counties).all()
-results2 = session.query(NC_Life_Expectancy).all()
-
-ledict = {}
-for rr in results2:
-	ledict[rr.id] = rr.life_expectancy
+for xxx in Base.classes.keys():
+	if xxx == 'NC Counties': continue
+	table = Base.classes[xxx]
 	
-print(ledict[5])
+	for aaa in table.__table__.columns:
 
-#for rr in results:
-#	print(rr.name)
-#	print(rr.boundary)
+		bbb = str(aaa).split(".")[1]
+		if bbb != 'id':
+			datasets.append(bbb)
+			#datasets.append(bbb.replace("_", " "))
+			DBtables[bbb] = table
+			
+			
+# Create the names route. When called upon by the JavaScript code,
+# this will populate the names route with a JSON string containing
+# the names of the datatsets contained in the postgres DB.
+
+county_data = session.query(NC_Counties).all()
+			
+@app.route("/names")
+def names():
+	"""Return a list of dataset names."""
+	return jsonify(datasets)
+
+#---------------------------------------------
 
 @app.route("/")
 def index():
-    """Return the homepage."""
+	"""Return the homepage."""
 	# The render_template function returns a string containing the
-	# html required to redner the page.
-    return(render_template("index.html"))
+	# html required to render the page.
+	return(render_template("index.html"))
 	
+#---------------------------------------------	
 	
-@app.route("/samples/life_expectancy")
-def samples():
-	results = session.query(NC_Counties).all()
+@app.route("/data/<datasetName>")
+def QuantityData(datasetName):
+	"""Return the data from the dataset associated with the given quantity + polygon info."""
+	
+	tableClass = DBtables[datasetName]
+	tableData = session.query(tableClass).all()
+	
+	datadict = {}
+	
+	for xx in tableData:
+		datadict[xx.id] = xx.__dict__[datasetName]
 	
 	data = []
 	
-	for rr in results:
-		data.append({"name": rr.name, 
-		"life_expectancy": ledict[rr.id],
-		"polygon":rr.boundary })
+	for cc in county_data:
+		data.append({"name": cc.name, 
+		"quantity": datadict[cc.id],
+		"polygon":cc.boundary })
+		
+	jsonData = []
+	jsonData.append(datasetName)
+	jsonData.append(data)
 	
-	return jsonify(data)
-	
+	return jsonify(jsonData)
+
 if __name__ == "__main__":
     app.run()
-
