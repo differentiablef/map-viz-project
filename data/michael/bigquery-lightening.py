@@ -53,8 +53,6 @@ if __name__=="__main__":
         obj['day'] = f'{entry["day"].year}-{entry["day"].month:02}-{entry["day"].day}'
         
         output.append(obj)
-        
-        
         if ii % 1000 == 0:
             with open('out.json', 'a') as out:
                 out.write('\n')
