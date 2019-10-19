@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Project 3 Flask App</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+	<h2>Choropleth Plot of North Carolina Counties</h2>
+  
+	<!--- The bootstrap .well class adds a rounded border around an element 
+	with a gray background color and some padding --->
+	
+    <div class="well">
+		<h3>SELECT Data Type:</h3>
+		<select id="selDataset" onchange="optionChanged(this.value)"></select>
+    </div>
+	
+	
+	<div id="dataset_info">Initial text ....</div>
+	<div id="state_chart">Initial text ....</div>
+	<div id="bar_chart">Initial text ....</div>
+  
+	<script src="https://d3js.org/d3.v5.min.js"></script>  
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>
