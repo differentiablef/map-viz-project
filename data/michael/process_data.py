@@ -24,15 +24,50 @@ class NCCounty(Base):
     name     = Column(String(255))
     boundary = Column(ARRAY(Float))
 
-    # determines whether a point is contained within the
-    #   boundary associated with this county
     def in_boundary(self, point):
-        for vertex in self.boundary:
-            print(vertex)
-        return False
+        """ determine whether a point is contained within the
+             boundary associated with this county """
+        crossings = 0
+        for ii in range(0, len(self.boundary)-1):
+            x1 = self.boundary[ii][0]
+            x2 = self.boundary[ii+1][0]
+
+            if (point[0] >= x1) and (point[0] >= x2):
+                continue
+
+            y1 = self.boundary[ii][1]
+            y2 = self.boundary[ii+1][1]
+
+            if y2 > y1:
+                if (point[1] >= y1) and (point[1] < y2):
+                    if (point[0] <= x1) and (point[0] <= x2):
+                        crossings += 1
+                        continue
+                    
+
+                    xref = x1 + (point[1] - y1)*(x2-x1)/(y2-y1)
+                    if point[0] < xref:
+                        crossings += 1
+                        continue
+                    pass
+                pass
+            elif y1 > y2:
+                if (point[1] >= y2) and (point[1] < y1):
+                    if (point[0] <= x1) and (point[0] <= x2):
+                        crossings += 1
+                        continue
+
+                    xref = x1 + (point[1] - y1)*(x2-x1)/(y2-y1)
+                    if point[0] < xref:
+                        crossings += 1
+                        continue
+                    pass
+                pass
+            pass
+        return ((crossings % 2) == 1)
     pass
 
-# class describing the table containing the
+# class describing the table containing 
 #  county level lightening strike data
 class LighteningStrikes(Base):
     __tablename__ = 'CountyStrikes'
@@ -85,8 +120,20 @@ def main():
     counties = load_counties(session)
 
     # load data to be binned by county
-    data = load_data(datafile)
-    pass
+    objs = load_data(datafile)
+
+    
+    # process the lightening strike records and
+    #  bin them if they are recorded occuring within a particular county
+    for obj in objs:
+        pt = obj['point']
+        for county in counties:
+            if county.in_boundary(pt):
+                print('hit')
+                print(county.name, pt)
+                break
+        
+    return 
 
 # script entry-point ###########################################################
 
