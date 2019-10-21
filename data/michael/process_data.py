@@ -1,16 +1,16 @@
 # imports ######################################################################
 
+# sqlalchemy related
+from sqlalchemy import create_engine, Column, Integer, String, Float, ARRAY
+from sqlalchemy.orm import Session
+from sqlalchemy.ext.declarative import declarative_base
+
 # standard
 import sys, os
 
 # utility
 import pandas as pd
 import numpy as np
-
-# sqlalchemy related
-from sqlalchemy import create_engine, Column, Integer, String, Float, ARRAY
-from sqlalchemy.orm import Session
-from sqlalchemy.ext.declarative import declarative_base
 
 # classes ######################################################################
 
@@ -23,7 +23,13 @@ class NCCounty(Base):
     id       = Column(Integer, primary_key=True)
     name     = Column(String(255))
     boundary = Column(ARRAY(Float))
-    
+
+    # determines whether a point is contained within the
+    #   boundary associated with this county
+    def in_boundary(self, point):
+        
+        return False
+    pass
     
 # methods ######################################################################
 
@@ -32,9 +38,6 @@ def load_counties(session):
     return objs    
 
 def load_data():
-    pass
-
-def in_polygon(polygon, point):
     pass
 
 def generate_histogram():
@@ -46,9 +49,7 @@ def main():
     session = Session(bind=engine)
 
     counties = load_counties(session)
-
     pass
-
 
 # script entry-point ###########################################################
 
