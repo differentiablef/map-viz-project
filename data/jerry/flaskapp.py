@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-engine = create_engine("postgresql://postgres:Helene@localhost:2903/project3")
+engine = create_engine("postgresql://postgres:postgres@localhost:5432/Project3")
 
 # Reflect an existing database into a new model.
 # Each table is reflected as a class.
@@ -41,7 +41,6 @@ for xxx in Base.classes.keys():
 		bbb = str(aaa).split(".")[1]
 		if bbb != 'id':
 			datasets.append(bbb)
-			#datasets.append(bbb.replace("_", " "))
 			DBtables[bbb] = table
 			
 			
@@ -87,6 +86,9 @@ def QuantityData(datasetName):
 		"polygon":cc.boundary })
 		
 	jsonData = []
+	
+	datasetName = datasetName.replace("_", " ");
+	
 	jsonData.append(datasetName)
 	jsonData.append(data)
 	

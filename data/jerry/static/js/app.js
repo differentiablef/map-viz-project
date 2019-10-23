@@ -18,8 +18,8 @@ var myMap = L.map("state_chart", {
 });
 
 var countyLayer = null;
-
-
+var legendLayer = null;
+var legendDiv = null;
 
 function buildDatasetPanel(datasetName) {
 
@@ -31,11 +31,11 @@ function buildDatasetPanel(datasetName) {
 	// Build the metadata output on the "dataset_info" div element.
 	// First construct a request to the data route for the dataset in question.
 	
-	var averageValue = 0.0;
-	var countyMax = "Mecklenburg County";
-	var maxValue = 0.0;
-	var countyMin = "Mecklenburg County";
-	var minValue = 0.0;
+	//var averageValue = 0.0;
+	//var countyMax = "Mecklenburg County";
+	//var maxValue = 0.0;
+	//var countyMin = "Mecklenburg County";
+	//var minValue = 0.0;
 	
 	d3.json("/data/" + datasetName).then((dataset) => {
 			
@@ -127,16 +127,28 @@ function buildStateChart(datasetName) {
 			}).bindPopup("<h3>" + countyName + "</h3><hr><h4>" + dataset[0] + " = " + qval.toFixed(1) + "</h4>")
 			
 			);
-			
-			
-			
 					
-			
 		}
 		
-		//var countyLayer = L.layerGroup(plist);
 		countyLayer = L.layerGroup(plist);
 		countyLayer.addTo(myMap);	
+		
+		
+		// Create a legend using the min/max values.
+		
+		if(legendLayer==null){
+			legendLayer = createLegend(qmin, qmax);
+			// Add legend to the map.
+	
+			legendLayer.addTo(myMap);
+		}
+		else{
+			updateLegend(qmin, qmax);
+		}
+
+		
+
+
 		
     });
 }
@@ -148,11 +160,8 @@ function markerColor(v, vmin, vmax){
 	
 	let r = Math.min(Math.max(v, vmin),vmax);
 	
-	console.log(r);
-	
 	let alpha = (r - vmin) / (vmax-vmin);
 	alpha = Math.max(Math.min(alpha, 1.0),0.0);
-	console.log(alpha);
 	
 	let col2 = [0, 0, 139];    // dark blue
 	let col1 = [255, 0, 0];    // bright red
@@ -197,13 +206,40 @@ function buildBarChart(datasetName) {
 		
 		barChartObj.html("");
 		
-		// TO DO.
+		var xy = [];
+		
+		for(var i =0; i<dataset[1].length; ++i){			
+			xy.push([dataset[1][i]['name'], dataset[1][i]['quantity']]);	
+		}
+	
+		
+		function cosort(a,b){
+			return a[1] - b[1];
+		}
+		xy.sort(cosort);
+		
+		var xxx = [];
+		var yyy = [];
+		
+		xy.forEach(a => {xxx.push(a[0]); yyy.push(a[1]);});
+		
+		for(var i =0; i<xxx.length; ++i){
+			// Get rid of the 'county' appendage.
+			res = xxx[i].split(" ");
+			xxx[i] = res[0];
+		}
+		
+		var colors = [];
+		
+		yyy.forEach(a=>{ colors.push(markerColor(a, yyy[0], yyy[yyy.length-1]))});
 		
 		// Part 2 - Adding attributes
 		var trace1 = {
-		x: ["beer", "wine", "martini", "margarita",
-			"ice tea", "rum & coke", "mai tai", "gin & tonic"],
-		y: [22.7, 17.1, 9.9, 8.7, 7.2, 6.1, 6.0, 4.6],
+		x: xxx,
+		y: yyy,
+		marker:{
+			color: colors
+		},
 		type: "bar"
 		};
 		
@@ -211,8 +247,8 @@ function buildBarChart(datasetName) {
 		
 		var layout = {
 		title: dataset[0],
-		xaxis: { title: "Drinks"},
-		yaxis: { title: "% of Drinks Ordered"}
+		//xaxis: { title: "County"},
+		yaxis: { title: dataset[0]}
 		};
 		
 		Plotly.newPlot("bar_chart", data, layout);
@@ -233,13 +269,24 @@ function init() {
   
   d3.json("/names").then((datasetNames) => {
     datasetNames.forEach((dataset) => {
-      selector
-        .append("option")
-        .text(dataset)
-        .property("value", dataset);
+		
+		var tokens = dataset.split('_')
+		var quantityName = tokens.join(' ')
+		
+		selector
+			.append("option")
+			.text(quantityName)
+			.property("value", dataset);
     });
 	
 	// Create initial content based on the first quantity in the list of datasets.
+		
+	var tokens = datasetNames[0].split('_')
+	var quantityName = tokens.join(' ')
+	
+	let titleElement = d3.select("#QuantityTitle");
+	let titstr = "<h2><center><strong>" + quantityName + "</strong></center></h2>";
+	titleElement.html(titstr);
 	
 	buildDatasetPanel(datasetNames[0]);
 	buildStateChart(datasetNames[0]);
@@ -256,15 +303,69 @@ function optionChanged(newDatasetName) {
 	
 	// Grab new data each time a new dataset is selected.
 	
+	var tokens = newDatasetName.split('_')
+	var quantityName = tokens.join(' ')
+	
+	let titleElement = d3.select("#QuantityTitle");
+	let titstr = "<h2><center><strong>" + quantityName + "</strong></center></h2>";
+	titleElement.html(titstr);
+	
 	buildDatasetPanel(newDatasetName);  
 	buildStateChart(newDatasetName);
 	buildBarChart(newDatasetName);  
 }
 
 
+function createLegend(vmin, vmax){
+	// Create a legend using min abd max values.
+	
+	
+	var legend = L.control({ position: "bottomright" });
+	legend.onAdd = function() {
+		
+		var div = L.DomUtil.create("div", "info legend");
+		legendDiv = div;
+		
+		updateLegend(vmin, vmax);
+    
+		return div;
+	};
+	
+	return legend;
+}
+
+function updateLegend(vmin, vmax){
+	
+		var limits = [];
+		var vdiff = (vmax-vmin);
+		
+		for(var i =0; i<9; ++i){
+			limits.push(vmin + i*0.125 * vdiff);
+		}
+		var colors = [];
+		var labels = [];
+		
+		limits.forEach(function(v, index){
+			colors.push(markerColor(v, vmin, vmax));
+		});		
+    
+		// Add min & max
+		var legendInfo = 
+        "<div class=\"min\">" + limits[0].toFixed(1) + "</div>" +
+        "<div class=\"max\">" + limits[limits.length - 1].toFixed(1) + "</div>" +
+		"</div>";
+    
+		legendDiv.innerHTML = legendInfo;
+    
+		limits.forEach(function(limit, index) {
+		labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+		});
+    
+		legendDiv.innerHTML += "<ul>" + labels.join("") + "</ul>";
+	
+}
+
+
 // Initialize the page.
-
-
-
 
 init();
