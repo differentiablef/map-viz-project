@@ -1,0 +1,7 @@
+#+TITLE: Lightening Strike Data
+
+** bigquery-lightening.py
+Pulls records detailing all lightening strikes within North America for the year of 2018. This data is recorded for each day of 2018 and is partially binned into 1km^2 regions.
+
+** process_data.py
+Assembles lightening strike data collected using the script =bigquery-lightening.py= then combines/bins the results by county. The script uses the center of the 1km^2 region described in the raw data to determine which county the total strikes occured within/near. This is done by determining whether or not the center occurs within the bounding polygon of some county.
