@@ -112,7 +112,8 @@ def main():
     datafile = './raw-lightening.json.bz2'
     
     # setup connection to postgresql database
-    engine  = create_engine("postgresql://postgres:lordb_urned@klein:5432/project3")
+    engine  = create_engine(
+        "postgresql://postgres@klein:5432/project3")
     conn    = engine.connect()
     session = Session(bind=engine)
 
@@ -124,35 +125,41 @@ def main():
     # load data to be binned by county
     objs = load_data(datafile)
 
-
-    global hist # for debuging
-    hist = dict()
-
     # combine objects into a 2d-histogram
+    global hist # for debuging
+    
+    hist = dict()
     print(f'=> Building historgram')
     for obj in objs:
         pt = obj.get('point')
         hist[pt]  = hist.get(pt, 0) + obj.get('strikes')
-        
-
+    
     global results # for debuging
     results = dict()
     
     # process the lightening strike records and
     #  bin them if they are recorded occuring within a particular county
-    print(f'=> Combining results by county')
+    print(f'=> Bining results by county')
     for pt in hist:
-        # if the point somewhere close to NC,
+        # if the point is somewhere close to NC,
         if (pt[0] < -75.0) and (pt[0] > -85.0) and \
            (pt[1] < 37.0) and (pt[1] > 33.0):
             # then see which county it might be in
+            found = False
             for county in counties:
                 if county.in_boundary(pt):
                     results[county.name] = results.get(county.name, 0) \
                         + hist[pt]
-                    print('hit', county.name, pt)
+                    found = True
+                    print('==>', county.name, pt)
                     break
-        
+                pass
+            if found:
+                hist[pt] = 1
+            else:
+                hist[pt] = 0.5   
+        else:
+            hist[pt] = 0
     return 
 
 # script entry-point ###########################################################
