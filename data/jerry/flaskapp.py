@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-engine = create_engine("postgresql://postgres:postgres@localhost:5432/Project3")
+engine = create_engine("postgresql://postgres:Helene@localhost:2903/project3")
 
 # Reflect an existing database into a new model.
 # Each table is reflected as a class.
