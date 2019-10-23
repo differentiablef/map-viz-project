@@ -1,7 +1,7 @@
 # imports ######################################################################
 
 # sqlalchemy related
-from sqlalchemy import create_engine, Column, Integer, String, Float, ARRAY
+from sqlalchemy import create_engine, MetaData, Column, Integer, String, Float, ARRAY, Table
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -74,6 +74,7 @@ class LighteningStrikes(Base):
     id      = Column(Integer, primary_key=True)
     county  = Column(Integer) # id of county 
     strikes = Column(Integer) # number of lightening strikes in county
+    
     pass
 
 # methods ######################################################################
@@ -113,7 +114,7 @@ def main():
     
     # setup connection to postgresql database
     engine  = create_engine(
-        "postgresql://postgres@klein:5432/project3")
+        "postgresql://postgres@localhost:5432/project3")
     conn    = engine.connect()
     session = Session(bind=engine)
 
@@ -148,7 +149,7 @@ def main():
             found = False
             for county in counties:
                 if county.in_boundary(pt):
-                    results[county.name] = results.get(county.name, 0) \
+                    results[county.id] = results.get(county.id, 0) \
                         + hist[pt]
                     found = True
                     print('==>', county.name, pt)
@@ -160,6 +161,26 @@ def main():
                 hist[pt] = 0.5   
         else:
             hist[pt] = 0
+            pass
+        pass
+
+    # create table for insertion into database
+    meta = MetaData()
+    lightening_table = Table(
+        LighteningStrikes.__tablename__, meta,
+        Column('id', Integer, primary_key=True),
+        Column('county', Integer),
+        Column('strikes', Integer))
+    meta.create_all(engine)
+    
+    # commit changes to server
+    session.commit()
+
+    for cid in results:
+        obj = LighteningStrikes(id=cid, county=cid, strikes=results[cid])
+        session.add(obj)
+        session.commit()
+        
     return 
 
 # script entry-point ###########################################################
