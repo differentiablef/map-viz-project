@@ -73,7 +73,7 @@ class LighteningStrikes(Base):
     __tablename__ = 'CountyStrikes'
     id      = Column(Integer, primary_key=True)
     county  = Column(Integer) # id of county 
-    strikes = Column(Integer) # number of lightening strikes in county
+    quantity = Column(Integer) # number of lightening strikes in county
     
     pass
 
@@ -127,19 +127,21 @@ def main():
     objs = load_data(datafile)
 
     # combine objects into a 2d-histogram
+
     global hist # for debuging
-    
     hist = dict()
+
     print(f'=> Building historgram')
     for obj in objs:
         pt = obj.get('point')
         hist[pt]  = hist.get(pt, 0) + obj.get('strikes')
+        
+    # process the lightening strike records and
+    #  bin them if they are recorded occuring within a particular county
     
     global results # for debuging
     results = dict()
-    
-    # process the lightening strike records and
-    #  bin them if they are recorded occuring within a particular county
+
     print(f'=> Bining results by county')
     for pt in hist:
         # if the point is somewhere close to NC,
@@ -170,14 +172,14 @@ def main():
         LighteningStrikes.__tablename__, meta,
         Column('id', Integer, primary_key=True),
         Column('county', Integer),
-        Column('strikes', Integer))
+        Column('quantity', Integer))
     meta.create_all(engine)
     
     # commit changes to server
     session.commit()
 
     for cid in results:
-        obj = LighteningStrikes(id=cid, county=cid, strikes=results[cid])
+        obj = LighteningStrikes(id=cid, county=cid, quantity=results[cid])
         session.add(obj)
         session.commit()
         
