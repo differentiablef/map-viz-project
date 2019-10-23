@@ -54,7 +54,7 @@ if __name__=="__main__":
         
         output.append(obj)
         if ii % 1000 == 0:
-            with open('out.json', 'a') as out:
+            with open('raw-lightening.json', 'a') as out:
                 out.write('\n')
                 json.dump(output, out)            
             del output
@@ -64,7 +64,7 @@ if __name__=="__main__":
             pass
         pass
     
-    with open('out.json', 'a') as out:
+    with open('raw-lightening.json', 'a') as out:
         out.write('\n')
         json.dump(output, out)
         pass
