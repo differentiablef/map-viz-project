@@ -9,7 +9,6 @@ from google.cloud import bigquery
 source = \
     'bigquery-public-data.noaa_lightning.lightning_2018'
 
-
 # list of features we want to extract
 features = \
     [#'day',
@@ -49,7 +48,7 @@ if __name__=="__main__":
     output = []
     for ii, entry in enumerate(jobq):
         obj = {f: entry[f] for f in features }
-        # fix datetime bullshit
+        # deal with datetime bullshit
         obj['day'] = f'{entry["day"].year}-{entry["day"].month:02}-{entry["day"].day}'
         
         output.append(obj)
