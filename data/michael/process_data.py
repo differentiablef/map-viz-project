@@ -72,8 +72,7 @@ class NCCounty(Base):
 class LighteningStrikes(Base):
     __tablename__ = 'CountyStrikes'
     id      = Column(Integer, primary_key=True)
-    county  = Column(Integer) # id of county 
-    quantity = Column(Integer) # number of lightening strikes in county
+    Lightening_Strikes = Column(Integer) # number of lightening strikes in county
     
     pass
 
@@ -171,18 +170,19 @@ def main():
     lightening_table = Table(
         LighteningStrikes.__tablename__, meta,
         Column('id', Integer, primary_key=True),
-        Column('county', Integer),
-        Column('quantity', Integer))
+        Column('Lightening_Strikes', Integer))
     meta.create_all(engine)
     
     # commit changes to server
     session.commit()
 
     for cid in results:
-        obj = LighteningStrikes(id=cid, county=cid, quantity=results[cid])
+        obj = LighteningStrikes(id=cid, Lightening_Strikes=results[cid])
         session.add(obj)
         session.commit()
-        
+
+    session.add(
+        LighteningStrikes(id=95, Lightening_Strikes=0)
     return 
 
 # script entry-point ###########################################################
