@@ -3,7 +3,7 @@
 A choropleth map is a chart that depicts geographic regions, with each region displayed with colors that are related to certain statistical quantities. In this project, the counties of North Carolina are displayed in a chorpleth map in accordance with a variety of quantities such as life_expectancy, population, health, education level to name but a few.
 <br>
 <p align="center">
-    <img src="le.png" width="700" height="400">  
+    <img src="life.png" width="700" height="400">  
 </p>
 <br>
 
