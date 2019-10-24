@@ -26,3 +26,22 @@ contains the cardiovascular fatality rate (per 100,000 people) for each county. 
 ### NC Census Data ###
 contains a miscellany of census data obtained for each county in NC, including population, population immigration for 2018, education level, poverty level and much more. It is created by running the notebook ```CensusData``` which imports data contained in ```ProjectData.csv```.
 
+## Future Work ##
+
+It is intended that the project be extended in order to create choropleth maps that encompass every state in the United States.
+It is also anticipated that future work for this project will involve creating choropleth maps with even more detail. This will require examining data that is available for each 'census tract'.
+A census tract is a geographic region defined for the purpose of taking a census. The underlying region will tend to have a population of between 2,500 and 8,000. 
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/JerryGreenough/Mecklenburg-County/master/mecktracts.png" width="400" height="400">  
+</p>
+
+<p align="center">
+    <strong>Cencus tracts for Mecklenburg County, NC</strong>
+</p>
+
+## Acknowledgments ##
+
+Much of the data used for this project has been made available by Eric Celeste. Much gratitude goes to Eric.
+Eric Celeste's website is: https://eric.clst.org/tech/usgeojson. Particular use has been made of the county boundary data stored in GeoJSON form - ```gz_2010_us_050_00_500k.json```
+
