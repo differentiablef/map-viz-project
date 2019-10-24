@@ -29,7 +29,7 @@ contains an estimate of the average life expectancy of individuals born in each 
 contains a yearly death rate due to drug poisoning for each county. It is created by running the ```drug_poisoning``` notebook.
 
 ### CountyStrikes ###
-is a data set that contains the total number of lightning strikes in each NC county. It is created by running the script ```process_data.py```, which makes use of data contained in ```raw-lightning.json.bz2```.
+is a data set that contains the total number of lightning strikes in each NC county during 2018. It is created by running the script ```process_data.py```, which makes use of data contained in ```raw-lightning.json.bz2```. The data was sourced from a Google BigQuery dataset from NOAA concerning lightning strikes.
 
 ### NC Cardiovascular Fatality Rate ###
 contains the cardiovascular fatality rate (per 100,000 people) for each county. It is created bt running the notebook ```SonalSQL```, which imports data contained in ```CVFatality.csv```.
