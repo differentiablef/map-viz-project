@@ -1,6 +1,6 @@
 # A Choropleth Map of North Carolina Counties
 
-A choropleth map is a chart that depicts geographic regions, with each region displayed with colors that are related to certain statistical quantities. In this project, the counties of North Carolina are displayed in a chorpleth map in accordance with a variety of quantities such as life_expectancy, population, health, education level to name but a few.
+A choropleth map is a chart that depicts geographic regions, with each region displayed with colors that are related to certain statistical quantities. In this project, the counties of North Carolina are displayed in a chorpleth map in accordance with a variety of quantities such as life expectancy, population, health, education level to name but a few.
 <p align="center">
     <img src="life.png" width="800">  
 </p>
@@ -20,10 +20,10 @@ The individual tables are now listed along with the corresponding creation softw
 Note that both ```pandas``` and ```geopandas``` should be installed in the host environment.
 
 ### NC Counties ###
-contains the FIPS code, name and geometry of each county in NC. It is created by running the ```LifeExpectancySQL``` notebook.
+contains the FIPS code, name and geometry of each county in NC. It is created by running the ```LifeExpectancySQL``` notebook. The geometry of each county is stored as a polygon (sometimes a multi-polygon) that was sourced from data downloaded from Eric Celeste's website: https://eric.clst.org/tech/usgeojson.
 
 ### NC Life Expectancy ###
-contains an estimate of the average life expectancy of individuals born in each NC county. It is also created by running the ```LifeExpectancySQL``` notebook.
+contains an estimate of the average life expectancy of individuals born in each NC county. It is also created by running the ```LifeExpectancySQL``` notebook. This data was sourced from www.countyhealthrankings.org, and is the fruit of a program sponsored by the Robert Wood Johnson Foundation.
 
 ### NC Drugs ###
 contains a yearly death rate due to drug poisoning for each county. It is created by running the ```drug_poisoning``` notebook.
