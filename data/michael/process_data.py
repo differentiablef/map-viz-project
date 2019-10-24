@@ -69,10 +69,10 @@ class NCCounty(Base):
 
 # class describing the table containing 
 #  county level lightening strike data
-class LighteningStrikes(Base):
+class LightningStrikes(Base):
     __tablename__ = 'CountyStrikes'
     id      = Column(Integer, primary_key=True)
-    Lightening_Strikes = Column(Integer) # number of lightening strikes in county
+    Lightning_Strikes = Column(Integer) # number of lightening strikes in county
     
     pass
 
@@ -109,7 +109,7 @@ def load_data(path):
 
 def main():
     # path to lightenting data
-    datafile = './raw-lightening.json.bz2'
+    datafile = './raw-lightning.json.bz2'
     
     # setup connection to postgresql database
     engine  = create_engine(
@@ -121,7 +121,7 @@ def main():
     # extract counties from database
     counties = load_counties(session)
 
-    print(f'=> Loading lightening strike data')
+    print(f'=> Loading lightning strike data')
     # load data to be binned by county
     objs = load_data(datafile)
 
@@ -135,7 +135,7 @@ def main():
         pt = obj.get('point')
         hist[pt]  = hist.get(pt, 0) + obj.get('strikes')
         
-    # process the lightening strike records and
+    # process the lightning strike records and
     #  bin them if they are recorded occuring within a particular county
     
     global results # for debuging
@@ -167,22 +167,23 @@ def main():
 
     # create table for insertion into database
     meta = MetaData()
-    lightening_table = Table(
-        LighteningStrikes.__tablename__, meta,
+    lightning_table = Table(
+        LightningStrikes.__tablename__, meta,
         Column('id', Integer, primary_key=True),
-        Column('Lightening_Strikes', Integer))
+        Column('Lightning_Strikes', Integer))
     meta.create_all(engine)
     
     # commit changes to server
     session.commit()
 
     for cid in results:
-        obj = LighteningStrikes(id=cid, Lightening_Strikes=results[cid])
+        obj = LightningStrikes(id=cid, Lightning_Strikes=results[cid])
         session.add(obj)
         session.commit()
 
     session.add(
-        LighteningStrikes(id=95, Lightening_Strikes=0)
+        LightningStrikes(id=95, Lightning_Strikes=0))
+    session.commit()
     return 
 
 # script entry-point ###########################################################
