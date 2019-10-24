@@ -41,7 +41,9 @@ contains a miscellany of census data obtained for each county in NC, including p
 
 Prior to executing the Flask app, it will be necessary to have an installation of the ```Flask``` and ```SQLAlchemy``` Python libraries in the host environment. The ```numpy``` and ```pandas``` Python libraries are also required. 
 <br>
+<br>
 In order to generate the map layer, it is necessary to supply a mapbox access token (available from https://account.mapbox.com/auth/signup/). The access token should be added to the ```API_KEY``` string inside the file ```./static/js/conifg.js```.
+<br>
 <br>
 The Flask app can now be executed simply by typing the following at the command prompt:
 <br>
