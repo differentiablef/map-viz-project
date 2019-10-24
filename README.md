@@ -4,6 +4,8 @@ A choropleth map is a chart that depicts geographic regions, with each region di
 <p align="center">
     <img src="life.png" width="800">  
 </p>
+
+
 ## Flask Application ##
 
 The choropleth map presented here is created by executing a python-based Flask application, namely ```flaskapp.py```. The map itself is built using JavaScript code together with certain features made available in the ```leaflet.js``` and ```plotly.js``` libraries. The flask application uses data that is extracted from a pre-populated PostgreSQL database using SQLAlchemy commands. Thus, in order for the Flask application to run it is necessary to build the PostgreSQL database using the Python code identified in the sections that follow:
