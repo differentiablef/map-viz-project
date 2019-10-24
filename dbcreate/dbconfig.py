@@ -1,1 +1,1 @@
-sqlConnection = "postgresql://postgres:postgres@localhost:5432/Project3x"
+sqlConnection = "postgresql://postgres:postgres@localhost:5432/Project3"
