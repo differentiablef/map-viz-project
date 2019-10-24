@@ -1,5 +1,10 @@
 # A Choropleth Map of North Carolina Counties
 
+A choropleth map is a chart that depicts geographic regions, with each region displayed with colors that are related to certain statistical quantities. In this project, the counties of North Carolina are displayed in a chorpleth map in accordance with a variety of quantities such as life_expectancy, population, health, education level to name but a few.
+<br>
+
+The choropleth map presented here is created by executing a python-based Flask application, namely ```flaskapp.py```. The map itself is built using JavaScript code together with certain features made available in the ```leaflet.js``` and ```plotly.js``` libraries. The flask application uses data that is extracted from a pre-populated PostgreSQL database using SQLAlchemy commands. In order for the Flask application to run it is necessary to build the PostgreSQL database.
+
 ## Database Creation ##
 The ```./dbcreate``` folder contains all the files required to generate tables within a Postgres SQL database called ‘Project3’. 
 It is recommended that this name be used because the application that generates the choropleth plots contains code that assumes ‘Project3’ is the name of the SQL database. 
@@ -7,6 +12,7 @@ The string required for the SQLAlchemy connection to the database is contained i
 In particular, the user should review the password contained in this file and configure it to match his/her personal Postgres password.
 <br>
 The individual tables are now listed along with the corresponding creation software together with a data file (if appropriate). The data files are also contained in the ```./dbcreate``` folder. At the very least, the 'NC Counties' table should be created beacuse this table contains data pertaining to the geometry of each county boundary as well as the name of each county.
+Note that both ```pandas``` and ```geopandas``` should be installed in the host environment.
 
 ### NC Counties ###
 contains the FIPS code, name and geometry of each county in NC. It is created by running the ```LifeExpectancySQL``` notebook.
@@ -25,6 +31,14 @@ contains the cardiovascular fatality rate (per 100,000 people) for each county. 
 
 ### NC Census Data ###
 contains a miscellany of census data obtained for each county in NC, including population, population immigration for 2018, education level, poverty level and much more. It is created by running the notebook ```CensusData``` which imports data contained in ```ProjectData.csv```.
+
+## Executing the Flask App ##
+
+Prior to executing the Flask app, it will be necessary to have an installation of the ```Flask``` and ```SQLAlchemy``` Python libraries in the host environment. The ```numpy``` and ```pandas``` Python libraries are also required. The Flask app can now be executed simply by typing the following at the command prompt:
+<br>
+```python flask.app```
+<br>
+
 
 ## Future Work ##
 
